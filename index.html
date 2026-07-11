@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="lampada">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Local-first EPUB reader built with Leptos, WASM and Tauri." />
+  <title>EPUB Reader RS</title>
+  <link data-trunk rel="css" href="public/tailwind.css" />
+  <link data-trunk rel="copy-dir" href="public/fonts" />
+  <!-- Piper TTS: engine JS vendorizzato (bundle + wasm ORT/espeak) servito da /tts/ -->
+  <link data-trunk rel="copy-dir" href="public/tts" />
+  <link data-trunk rel="icon" href="public/epub-logo.svg" />
+  <link data-trunk rel="icon" href="public/favicon.ico" />
+  <link data-trunk rel="rust" data-wasm-opt="0" data-weak-refs />
+  <script type="module" src="/tts/piper_tts.js"></script>
+</head>
+
+<body>
+  <noscript>EPUB Reader RS requires JavaScript and WebAssembly.</noscript>
+</body>
+
+</html>

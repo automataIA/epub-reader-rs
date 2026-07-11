@@ -1,0 +1,29 @@
+[build]
+target = "index.html"
+features = ["gh-pages"]
+release = true
+dist = "dist"
+public_url = "/epub-reader-rs/"
+filehash = true
+inject_scripts = true
+minify = "on_release"
+
+[watch]
+ignore = ["./src-tauri", "./target", "./dist", "./public/tailwind.css"]
+
+[[hooks]]
+stage = "build"
+command = "npm"
+command_arguments = ["run", "css:build"]
+
+# Build the Piper TTS bundle + fetch its wasm assets before the copy-dir runs.
+[[hooks]]
+stage = "pre_build"
+command = "npm"
+command_arguments = ["run", "tts:build"]
+
+# Prefix the absolute /tts/ asset paths with the gh-pages base path.
+[[hooks]]
+stage = "post_build"
+command = "bash"
+command_arguments = ["scripts/ghpages-basepath.sh"]

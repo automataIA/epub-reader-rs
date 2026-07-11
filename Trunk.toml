@@ -1,0 +1,30 @@
+[build]
+target = "index.html"
+release = false
+dist = "dist"
+public_url = "/"
+filehash = true
+inject_scripts = true
+minify = "on_release"
+
+[watch]
+watch = []
+ignore = ["./src-tauri", "./target", "./dist", "./node_modules", "./public/tailwind.css", "./public/tts"]
+
+[serve]
+addresses = ["127.0.0.1"]
+port = 1420
+open = false
+ws_protocol = "ws"
+
+[[hooks]]
+stage = "build"
+command = "npm"
+command_arguments = ["run", "css:build"]
+
+# Costruisce il bundle Piper TTS e scarica gli asset wasm (ORT/espeak) in
+# public/tts/ prima che Trunk copi la cartella (copy-dir in index.html).
+[[hooks]]
+stage = "pre_build"
+command = "npm"
+command_arguments = ["run", "tts:build"]

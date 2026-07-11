@@ -1,0 +1,78 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Cache TTS wasm assets
+        uses: actions/cache@v4
+        with:
+          path: |
+            public/tts/ort
+            public/tts/piper
+          key: tts-assets-${{ hashFiles('scripts/build-tts.mjs', 'package-lock.json') }}
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install Trunk
+        uses: jetli/trunk-action@v0.5.0
+        with:
+          # Single-source the pinned Trunk version via the repo variable
+          # TRUNK_VERSION (Settings → Secrets and variables → Actions → Variables).
+          # Falls back to the literal below if the variable is unset.
+          version: ${{ vars.TRUNK_VERSION || 'v0.21.14' }}
+
+      - name: Build
+        run: trunk build --release --config Trunk.ghpages.toml
+
+      - name: Prepare SPA fallback
+        run: |
+          cp public/.nojekyll dist/.nojekyll
+          cp dist/index.html dist/404.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

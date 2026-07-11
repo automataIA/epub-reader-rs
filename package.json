@@ -1,0 +1,19 @@
+{
+  "name": "epub-reader-rs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "css:build": "npx @tailwindcss/cli -i style/input.css -o public/tailwind.css --minify",
+    "css:watch": "npx @tailwindcss/cli -i style/input.css -o public/tailwind.css --watch",
+    "tts:build": "node scripts/build-tts.mjs"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "daisyui": "^5.0.0",
+    "esbuild": "^0.28.1",
+    "tailwindcss": "^4.1.0"
+  },
+  "dependencies": {
+    "@diffusionstudio/vits-web": "^1.0.3"
+  }
+}

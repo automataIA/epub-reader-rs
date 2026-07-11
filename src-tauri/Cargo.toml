@@ -1,0 +1,38 @@
+[package]
+name = "epub-reader-rs-tauri"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+# Native GPU TTS (desktop only), enabled via the `gpu-tts` feature. The GPU
+# execution provider is chosen per-OS below; falls back to CPU. The web build
+# uses the JS Piper engine instead.
+ort = { version = "2.0.0-rc.10", optional = true }
+tokio = { version = "1", features = ["rt"], optional = true }
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"], optional = true }
+dirs = { version = "5", optional = true }
+serde = { version = "1", features = ["derive"], optional = true }
+serde_json = { version = "1", optional = true }
+
+# Per-OS GPU execution provider (cargo unifies these onto the base `ort` dep):
+#   Windows → DirectML (ships with Windows, any GPU, no runtime install)
+#   macOS   → CoreML (built into macOS)
+#   Linux   → CUDA (needs CUDA runtime; else CPU fallback at runtime)
+[target.'cfg(windows)'.dependencies]
+ort = { version = "2.0.0-rc.10", features = ["directml"], optional = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+ort = { version = "2.0.0-rc.10", features = ["coreml"], optional = true }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+ort = { version = "2.0.0-rc.10", features = ["cuda"], optional = true }
+
+[features]
+# Native GPU TTS: GPU inference; PCM is returned to the webview and played
+# through its Web Audio queue. The web build uses the JS Piper engine instead.
+gpu-tts = ["dep:ort", "dep:tokio", "dep:reqwest", "dep:dirs", "dep:serde", "dep:serde_json"]
