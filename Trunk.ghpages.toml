@@ -11,8 +11,11 @@ minify = "on_release"
 [watch]
 ignore = ["./src-tauri", "./target", "./dist", "./public/tailwind.css"]
 
+# pre_build (not build): the build hook runs in parallel with the pipeline, so
+# on a fresh checkout trunk's rel="css" link resolves before css:build writes
+# public/tailwind.css (gitignored). pre_build guarantees the file exists first.
 [[hooks]]
-stage = "build"
+stage = "pre_build"
 command = "npm"
 command_arguments = ["run", "css:build"]
 

@@ -17,8 +17,11 @@ port = 1420
 open = false
 ws_protocol = "ws"
 
+# pre_build (non build): l'hook "build" gira in parallelo alla pipeline, quindi
+# su un checkout pulito trunk risolve il link rel="css" prima che css:build
+# scriva public/tailwind.css (gitignored). pre_build garantisce l'ordine.
 [[hooks]]
-stage = "build"
+stage = "pre_build"
 command = "npm"
 command_arguments = ["run", "css:build"]
 

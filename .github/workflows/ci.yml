@@ -8,6 +8,13 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+# paths-filter lists PR files via the GitHub API (needs pull-requests: read).
+# Dependabot-triggered runs get a read-only token that omits that scope unless
+# it is granted explicitly, hence "Resource not accessible by integration".
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   # Detect whether the desktop crate is affected, so the 3-OS matrix below only
   # runs when it must. src-tauri is an isolated crate (no shared code with src/),
