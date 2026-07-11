@@ -14,16 +14,19 @@ ignore = ["./src-tauri", "./target", "./dist", "./public/tailwind.css"]
 # pre_build (not build): the build hook runs in parallel with the pipeline, so
 # on a fresh checkout trunk's rel="css" link resolves before css:build writes
 # public/tailwind.css (gitignored). pre_build guarantees the file exists first.
+# `node` (not `npm`): Trunk spawns hooks without a shell, so on Windows `npm`
+# (npm.cmd) can't be spawned. `node` resolves on every OS. Same effect as
+# `npm run css:build`/`tts:build`; keeps this config identical to Trunk.toml.
 [[hooks]]
 stage = "pre_build"
-command = "npm"
-command_arguments = ["run", "css:build"]
+command = "node"
+command_arguments = ["node_modules/@tailwindcss/cli/dist/index.mjs", "-i", "style/input.css", "-o", "public/tailwind.css", "--minify"]
 
 # Build the Piper TTS bundle + fetch its wasm assets before the copy-dir runs.
 [[hooks]]
 stage = "pre_build"
-command = "npm"
-command_arguments = ["run", "tts:build"]
+command = "node"
+command_arguments = ["scripts/build-tts.mjs"]
 
 # Prefix the absolute /tts/ asset paths with the gh-pages base path.
 [[hooks]]

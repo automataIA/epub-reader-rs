@@ -20,14 +20,17 @@ ws_protocol = "ws"
 # pre_build (non build): l'hook "build" gira in parallelo alla pipeline, quindi
 # su un checkout pulito trunk risolve il link rel="css" prima che css:build
 # scriva public/tailwind.css (gitignored). pre_build garantisce l'ordine.
+# `node` (non `npm`): Trunk spawna gli hook senza shell, e su Windows `npm` è
+# `npm.cmd` → non spawnabile ("error spawning hook call for npm"). `node` è un
+# eseguibile risolto su ogni OS. Equivale a `npm run css:build`/`tts:build`.
 [[hooks]]
 stage = "pre_build"
-command = "npm"
-command_arguments = ["run", "css:build"]
+command = "node"
+command_arguments = ["node_modules/@tailwindcss/cli/dist/index.mjs", "-i", "style/input.css", "-o", "public/tailwind.css", "--minify"]
 
 # Costruisce il bundle Piper TTS e scarica gli asset wasm (ORT/espeak) in
 # public/tts/ prima che Trunk copi la cartella (copy-dir in index.html).
 [[hooks]]
 stage = "pre_build"
-command = "npm"
-command_arguments = ["run", "tts:build"]
+command = "node"
+command_arguments = ["scripts/build-tts.mjs"]
