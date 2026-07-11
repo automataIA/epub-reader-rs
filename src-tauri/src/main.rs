@@ -1,3 +1,7 @@
+// Nasconde la finestra console su Windows nelle build release (in debug resta
+// per vedere i log). Senza questo il binario parte come console app → terminale.
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 #[cfg(feature = "gpu-tts")]
 mod tts;
 
