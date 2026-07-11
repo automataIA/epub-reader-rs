@@ -1,6 +1,6 @@
 [package]
 name = "epub-reader-rs-tauri"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 publish = false
 
@@ -14,7 +14,10 @@ tauri = { version = "2", features = [] }
 # uses the JS Piper engine instead.
 ort = { version = "2.0.0-rc.10", optional = true }
 tokio = { version = "1", features = ["rt"], optional = true }
-reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"], optional = true }
+reqwest = { version = "0.12", default-features = false, features = [
+    "blocking",
+    "rustls-tls",
+], optional = true }
 dirs = { version = "5", optional = true }
 serde = { version = "1", features = ["derive"], optional = true }
 serde_json = { version = "1", optional = true }
@@ -35,4 +38,11 @@ ort = { version = "2.0.0-rc.10", features = ["cuda"], optional = true }
 [features]
 # Native GPU TTS: GPU inference; PCM is returned to the webview and played
 # through its Web Audio queue. The web build uses the JS Piper engine instead.
-gpu-tts = ["dep:ort", "dep:tokio", "dep:reqwest", "dep:dirs", "dep:serde", "dep:serde_json"]
+gpu-tts = [
+    "dep:ort",
+    "dep:tokio",
+    "dep:reqwest",
+    "dep:dirs",
+    "dep:serde",
+    "dep:serde_json",
+]
