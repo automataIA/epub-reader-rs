@@ -34,7 +34,7 @@ jobs:
             target: ""
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -46,13 +46,13 @@ jobs:
           workspaces: src-tauri
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: npm
 
       - name: Cache TTS wasm assets
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             public/tts/ort
@@ -63,7 +63,7 @@ jobs:
         run: npm ci
 
       - name: Install Trunk
-        uses: jetli/trunk-action@v0.5.0
+        uses: jetli/trunk-action@v0.5.1
         with:
           # See deploy.yml: set repo variable TRUNK_VERSION to bump in one place.
           version: ${{ vars.TRUNK_VERSION || 'v0.21.14' }}
@@ -76,7 +76,7 @@ jobs:
             librsvg2-dev libayatana-appindicator3-dev patchelf
 
       - name: Build & release desktop app
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
