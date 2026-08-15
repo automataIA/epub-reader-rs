@@ -8,9 +8,9 @@
     "tts:build": "node scripts/build-tts.mjs"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.1.0",
-    "daisyui": "^5.0.0",
-    "esbuild": "^0.28.1",
+    "@tailwindcss/cli": "^4.3.3",
+    "daisyui": "^5.7.16",
+    "esbuild": "^0.28.2",
     "tailwindcss": "^4.1.0"
   },
   "dependencies": {
